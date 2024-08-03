@@ -188,7 +188,7 @@
         CookieManager.write(domain, main_selector)
 
         // Sử dụng API proxy công cộng (chỉ cho mục đích demo)
-        var proxyUrl = 'http://localhost:3321/get??url=' + encodeURIComponent(urlContent);
+        var proxyUrl = 'http://localhost:3321/get?url=' + encodeURIComponent(urlContent);
 
         try {
           const response = await fetch(proxyUrl);

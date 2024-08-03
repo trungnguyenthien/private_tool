@@ -11,21 +11,28 @@ app.get('/get', async (req, res) => {
   const url = req.query.url;
   
   if (!url) {
-    return res.status(400).json({ error: 'URL parameter is required' });
+    return res.status(400).send('URL parameter is required');
   }
 
   try {
-    const response = await axios.get(url);
-    res.json({
-      contents: response.data,
-      status: {
-        url: response.config.url,
-        content_type: response.headers['content-type'],
-        http_code: response.status,
-      },
+    const response = await axios.get(url, {
+      responseType: 'stream'
     });
+
+    // Sao chép các header từ response gốc
+    Object.keys(response.headers).forEach(header => {
+      res.setHeader(header, response.headers[header]);
+    });
+
+    // Thêm một số header tùy chỉnh nếu cần
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('X-Proxied-Url', response.config.url);
+    res.setHeader('X-Proxied-Status', response.status);
+
+    // Pipe dữ liệu trực tiếp từ response gốc đến response của chúng ta
+    response.data.pipe(res);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch the URL' });
+    res.status(500).send('Failed to fetch the URL');
   }
 });
 

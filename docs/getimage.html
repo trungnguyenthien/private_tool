@@ -188,7 +188,7 @@
         CookieManager.write(domain, main_selector)
 
         // Sử dụng API proxy công cộng (chỉ cho mục đích demo)
-        var proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(urlContent);
+        var proxyUrl = 'http://localhost:3321/get??url=' + encodeURIComponent(urlContent);
 
         try {
           const response = await fetch(proxyUrl);
@@ -230,7 +230,7 @@
       }
 
       function saveImage(url, output_dir) {
-        fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url))
+        fetch('http://localhost:3321/get?url=' + encodeURIComponent(url))
           .then(response => response.blob())
           .then(blob => {
             const link = document.createElement('a');
